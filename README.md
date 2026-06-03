@@ -1,13 +1,15 @@
 # Enterprise Data Platform Portfolio
 ### Principal Engineer · Cloud Infrastructure · Distributed Systems · AI Engineering
 
-> **A production-grade ecosystem of 12 interconnected systems spanning real-time event streaming, secure multi-tenant data architecture, declarative cloud infrastructure, AI-native search, and automated chaos resiliency — built, deployed, verified, and documented end-to-end.**
+> **A production-grade ecosystem of 13 interconnected systems spanning real-time event streaming, secure multi-tenant data architecture, declarative cloud infrastructure, AI-native search, and automated chaos resiliency — built, deployed, verified, and documented end-to-end.**
 
 <div align="center">
 
 [![GitHub](https://img.shields.io/badge/GitHub-RandyRozario-181717?style=flat-square&logo=github)](https://github.com/RandyRozario)
 [![LeetCode](https://img.shields.io/badge/LeetCode-randyrozario-FFA116?style=flat-square&logo=leetcode)](https://leetcode.com/u/randyrozario/)
-![Projects](https://img.shields.io/badge/Projects-12-blue?style=flat-square)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-randygregoryrozario-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/randygregoryrozario)
+
+![Projects](https://img.shields.io/badge/Projects-13-blue?style=flat-square)
 ![Stack](https://img.shields.io/badge/Stack-Full--Stack%20%7C%20DevOps%20%7C%20AI-green?style=flat-square)
 
 </div>
@@ -38,7 +40,9 @@ The platform processes events from raw ingestion through to secure multi-tenant 
 | 10 | [secure-supply-chain](#10--devsecoops-secure-supply-chain-pipeline) | DevSecOps | Gitleaks · Semgrep · Trivy · Syft · Hadolint | ✅ Verified |
 | 11 | [enterprise-platform](#11--enterprise-data-platform-core) | Platform Engineering | Terraform · Kubernetes · Python · K8s | ✅ Verified |
 | 12 | [platform-fabric](#12--enterprise-cloud-platform-infrastructure-fabric) | Cloud Infrastructure | Terraform · Kubernetes · Vault · NGINX | ✅ Verified |
-| ∞  | [chaos-mesh](#-centralized-enterprise-governance--chaos-engineering-mesh) | SRE · Governance | Prometheus · OPA Rego · Python · Grafana | ✅ Verified |
+| 13 | [chaos-mesh](#13--centralized-enterprise-governance--chaos-engineering-mesh) | SRE · Governance | Prometheus · OPA Rego · Python · Grafana | ✅ Verified |
+
+> **Note on Project 13:** The chaos-mesh is intentionally the final entry because it is a cross-cutting governance layer — it monitors, stress-tests, and enforces policy across all 12 preceding projects simultaneously. It has no peers; it governs them all.
 
 ---
 
@@ -148,7 +152,7 @@ The crown jewel of the data layer. Implements PostgreSQL Row-Level Security with
 - RLS policies active on: `users`, `products`, `orders`, `order_items`, `audit_logs`
 - Two production tenants seeded: Acme Corporation + Globex Inc
 
-**Stack:** `NestJS` `TypeScript` `Prisma` `PostgreSQL 16` `RLS` `Docker`
+**Stack:** `NestJS` `TypeScript` `Prisma` `PostgreSQL 16` `PL/pgSQL` `RLS` `Docker`
 
 ---
 
@@ -166,7 +170,7 @@ A production-grade Role-Based Access Control system implementing JWT RS256 asymm
 - Refresh token rotation: 15-minute access tokens, 7-day refresh window
 - Demo principals: alice (viewer), bob (operator), carol (administrator)
 
-**Stack:** `Node.js` `Express` `PostgreSQL` `React TypeScript` `Tailwind CSS` `JWT RS256`
+**Stack:** `Node.js` `Express` `PostgreSQL` `PL/pgSQL` `React TypeScript` `Tailwind CSS` `JWT RS256`
 
 ---
 
@@ -218,7 +222,7 @@ The Chaos Engineering Mesh sits above this infrastructure layer and stress-tests
 ### 09 · Zero-Downtime Multi-Region DR Pipeline
 **`github.com/RandyRozario/dr-pipeline`**
 
-A Terraform-provisioned disaster recovery pipeline simulating AWS multi-region failover. Route53 health-check DNS records automatically promote the SECONDARY endpoint to PRIMARY when the primary region's health check fails. S3 Cross-Region Replication with KMS encryption and STANDARD_IA storage class keeps data consistent across regions.
+A Terraform-provisioned disaster recovery pipeline simulating AWS multi-region failover. Route53 health-check DNS records automatically promote the SECONDARY endpoint to PRIMARY when the primary region fails. S3 Cross-Region Replication with KMS encryption and STANDARD_IA storage class keeps data consistent across regions.
 
 **Architectural role:** Business continuity layer. Proves that the platform can survive a complete regional AWS outage with automatic DNS failover and zero data loss.
 
@@ -226,7 +230,7 @@ A Terraform-provisioned disaster recovery pipeline simulating AWS multi-region f
 - 29 Terraform resources applied successfully via LocalStack
 - PRIMARY + SECONDARY Route53 DNS failover records confirmed
 - S3 cross-region replication active with KMS + STANDARD_IA
-- CloudWatch alarm via HTTP POST workaround (LocalStack Community limitation)
+- CloudWatch alarm via HTTP POST workaround (LocalStack Community)
 
 **Stack:** `Terraform` `LocalStack` `Route53` `S3 CRR` `KMS` `CloudWatch`
 
@@ -237,7 +241,7 @@ A Terraform-provisioned disaster recovery pipeline simulating AWS multi-region f
 
 A four-stage CI/CD security gate that every container image must pass before deployment. Stage 1 scans for hardcoded secrets (Gitleaks). Stage 2 performs static application security testing (Semgrep). Stage 3 generates a Software Bill of Materials (Syft SBOM) and dependency vulnerability scan. Stage 4 scans the built container image for CVEs (Trivy). Any stage failure blocks the deployment.
 
-**Architectural role:** Security enforcement layer. Every container image running in the Kubernetes cluster and Docker Compose stacks passed through this pipeline. The SBOM artifacts are stored in S3 for compliance audit trails.
+**Architectural role:** Security enforcement layer. Every container image running in the Kubernetes cluster passed through this pipeline. SBOM artifacts are stored in S3 for compliance audit trails.
 
 **Verified output:**
 - All 4 pipeline stages: PASSING
@@ -255,7 +259,7 @@ A four-stage CI/CD security gate that every container image must pass before dep
 
 The unified infrastructure layer that elevates 10 standalone projects into a cohesive enterprise platform. Complete Terraform provisioning (65 resources), Kubernetes manifests (18 resources), and an automated PostgreSQL data catalog extractor that introspects every table, column, index, and RLS policy and outputs a machine-readable schema dictionary with quality scoring.
 
-**Architectural role:** Integration layer. Connects all 10 projects through shared network topology, unified secret management, centralized logging, and automated schema documentation.
+**Architectural role:** Integration layer. Connects all projects through shared network topology, unified secret management, centralized logging, and automated schema documentation.
 
 **Verified output:**
 - Terraform plan: 65 resources, 0 errors
@@ -273,7 +277,7 @@ The unified infrastructure layer that elevates 10 standalone projects into a coh
 
 A production-grade, declarative infrastructure layer implementing a 3-tier VPC topology with strict network isolation, HashiCorp Vault secret injection, NGINX ingress controller with rate limiting and security headers, and HPA autoscaling across all workloads. Zero hardcoded credentials anywhere in the codebase.
 
-**Architectural role:** Foundation layer. The VPC topology, security groups, and Kubernetes manifests in this repository are what make the multi-tenant database physically unreachable from the internet, the secrets dynamically injected at pod startup, and the services auto-scaling under load.
+**Architectural role:** Foundation layer. The VPC topology, security groups, and Kubernetes manifests make the multi-tenant database physically unreachable from the internet, secrets dynamically injected at pod startup, and services auto-scaling under load.
 
 **Verified output:**
 - Terraform plan: **65 resources, 0 errors**
@@ -286,19 +290,19 @@ A production-grade, declarative infrastructure layer implementing a 3-tier VPC t
 
 ---
 
-### ∞ · Centralized Enterprise Governance & Chaos Engineering Mesh
+### 13 · Centralized Enterprise Governance & Chaos Engineering Mesh
 **`github.com/RandyRozario/chaos-mesh`**
 
-The SRE command center. A Python chaos simulator that programmatically kills containers and injects network latency to stress-test platform self-healing. 20 Prometheus alert rules across 7 groups fire to a live terminal console via Alertmanager webhook. An OPA Rego policy gate inspects every Terraform plan and blocks deployment on any of 8 security violations.
+The SRE command center and the only project in this portfolio that has no peers — it governs all 12 others simultaneously. A Python chaos simulator that programmatically kills containers and injects network latency to stress-test platform self-healing. Twenty Prometheus alert rules across 7 groups fire to a live terminal console via Alertmanager webhook. An OPA Rego policy gate inspects every Terraform plan and blocks deployment on any of 8 security violations.
 
-**Architectural role:** Resiliency verification layer. Proves that the platform recovers from infrastructure failures within the 60-second SLO target, that alerts fire within 15 seconds of a threshold breach, and that no Terraform deployment can introduce a security misconfiguration.
+**Architectural role:** Cross-cutting resiliency and compliance layer. Proves that the platform recovers from infrastructure failures within the 60-second SLO target, alerts fire within 15 seconds of a threshold breach, and no Terraform deployment can introduce a security misconfiguration.
 
 **Verified output:**
 - Container latency injection: `multitenant-api` paused 30.47s → **100% resilience score**
 - Alert pipeline: `PostgreSQLDown` fired → resolved end-to-end verified
 - Policy gate: 8 security rules evaluated → **0 violations, DEPLOYMENT APPROVED**
 - Policy evaluation time: **8ms**
-- 7 observability services running: Prometheus, Grafana, Alertmanager, cAdvisor, Node Exporter, Postgres Exporter, Redis Exporter
+- 7 observability services: Prometheus, Grafana, Alertmanager, cAdvisor, Node Exporter, Postgres Exporter, Redis Exporter
 
 **Stack:** `Python` `Prometheus` `Grafana` `OPA Rego` `Alertmanager` `Docker Compose`
 
@@ -306,7 +310,7 @@ The SRE command center. A Python chaos simulator that programmatically kills con
 
 ## Tier 4 — Business Strategy, Process Engineering & Executive Analytics
 
-> *The boardroom layer. Where raw infrastructure metrics become executive KPIs, where engineering decisions are justified with financial models, and where the platform's compliance posture is documented for auditors.*
+> *The boardroom layer. Where raw infrastructure metrics become executive KPIs, engineering decisions are justified with financial models, and the platform compliance posture is documented for auditors. Development project extensions are in active planning.*
 
 ---
 
@@ -314,257 +318,251 @@ The SRE command center. A Python chaos simulator that programmatically kills con
 
 | Business Outcome | Metric | Engineering Mechanism | Verified Evidence |
 |---|---|---|---|
-| **High Availability** | Target 99.99% uptime under active chaos injection | Kubernetes HPA (3→20 pods), PodDisruptionBudgets (`minAvailable: 2`), liveness/readiness probes on `/healthz`, Docker `restart: unless-stopped` | Latency injection: 30.47s disruption, full recovery, 100% resilience score |
-| **Mean Time to Detect** | ≤ 15 seconds | Prometheus 10-15s scrape interval, Alertmanager `group_wait: 0s` for critical alerts, cAdvisor 10s container metrics | `PostgreSQLDown` alert fired and delivered to terminal console within 15s of container stop |
-| **Mean Time to Recover** | ≤ 60 seconds | Docker restart policy, K8s pod replacement, readiness probe gate before traffic restoration | Chaos simulator measured recovery: 38-52s across test runs. SLO: <60s |
+| **High Availability** | Target 99.99% uptime under chaos injection | Kubernetes HPA (3→20 pods), PodDisruptionBudgets (`minAvailable: 2`), liveness/readiness probes on `/healthz`, Docker `restart: unless-stopped` | Latency injection: 30.47s disruption, full recovery, 100% resilience score |
+| **Mean Time to Detect** | 15 seconds | Prometheus 10-15s scrape interval, Alertmanager `group_wait: 0s` for critical alerts, cAdvisor 10s container metrics | `PostgreSQLDown` alert fired and delivered to terminal within 15s of container stop |
+| **Mean Time to Recover** | 60 seconds | Docker restart policy, K8s pod replacement, readiness probe gate before traffic restoration | Chaos simulator measured: 38-52s recovery. SLO target: under 60s |
 | **Event Throughput** | 244 req/s sustained | Node.js Fastify + Kafka consumer groups + Redis distributed locking | 1,000 concurrent requests, zero overselling, verified in microservices-arch |
-| **Data Security** | Zero cross-tenant leakage | PostgreSQL RLS (engine-level) + NestJS middleware (application-level) + VPC security groups (network-level) | 24 breach simulation tests: **0 leaks across all scenarios** |
-| **Cloud Cost Optimization** | $172,440/year savings | Shared-schema multi-tenancy (1 RDS vs 100 separate DBs), HPA scale-down at 3AM (3 pods vs 20), Fargate Spot for burst capacity | $290/month (1 RDS db.r6g.large) vs $6,800/month (100x db.t3.small) |
-| **Infrastructure Provisioning** | ≤ 4 minutes | `terraform apply` provisions 65 resources in parallel via LocalStack simulation | Measured: complete 3-tier VPC + RDS + Redis + ALB + IAM in <4 minutes |
-| **IaC Compliance** | 100% block rate on critical violations | OPA Rego policy engine (8 rules) + Python fallback, CI mode exits 1 on critical violation | 0 violations detected on platform-fabric Terraform plan, evaluated in 8ms |
-| **AI Retrieval Accuracy** | Zero hallucinations on enterprise knowledge base | Similarity threshold gate (0.35), ChromaDB vector search, LangChain retrieval chain | `INSUFFICIENT_CONTEXT` returned for below-threshold queries — hallucination impossible |
-| **Security Pipeline** | 100% CVE gate enforcement | 4-stage supply chain: Gitleaks + Semgrep + Syft/Trivy + Hadolint | All 4 stages passing; GitHub push protection blocks real credential commits |
-| **Secret Management** | Zero hardcoded credentials | HashiCorp Vault KV engine, 1-hour TTL leases, Kubernetes ServiceAccount JWT auth | Zero credentials in any container image, ConfigMap, or source code across all 12 repos |
-| **Observability Coverage** | 100% service instrumentation | Prometheus scraping 9 job targets, 20 alert rules, 15 Grafana panels, cAdvisor container metrics | All scrape targets UP, 15 panels populated, golden signals captured |
+| **Data Security** | Zero cross-tenant leakage | PostgreSQL RLS (engine) + NestJS middleware (application) + VPC security groups (network) | 24 breach simulation tests: **0 leaks across all scenarios** |
+| **Cloud Cost Optimization** | $172,440/year savings | Shared-schema multi-tenancy (1 RDS vs 100 DBs), HPA scale-down at 3AM, Fargate Spot for burst | $290/month (1 RDS db.r6g.large) vs $6,800/month (100x db.t3.small) |
+| **Infrastructure Provisioning** | Under 4 minutes | `terraform apply` provisions 65 resources in parallel via LocalStack | Complete 3-tier VPC + RDS + Redis + ALB + IAM in under 4 minutes |
+| **IaC Compliance** | 100% block rate on critical violations | OPA Rego policy engine (8 rules) + Python fallback, CI mode exits 1 on critical violation | 0 violations on platform-fabric Terraform plan, evaluated in 8ms |
+| **AI Retrieval Accuracy** | Zero hallucinations | Similarity threshold gate (0.35), ChromaDB vector search, LangChain retrieval chain | `INSUFFICIENT_CONTEXT` returned below threshold — hallucination structurally impossible |
+| **Security Pipeline** | 100% CVE gate enforcement | 4-stage supply chain: Gitleaks + Semgrep + Syft/Trivy + Hadolint | All 4 stages passing; GitHub push protection verified on real credential commits |
+| **Secret Management** | Zero hardcoded credentials | HashiCorp Vault KV engine, 1-hour TTL leases, Kubernetes ServiceAccount JWT auth | Zero credentials in any container image, ConfigMap, or source file across all 13 repos |
+| **Observability Coverage** | 100% service instrumentation | Prometheus 9 scrape targets, 20 alert rules, 15 Grafana panels, cAdvisor container metrics | All scrape targets UP, 15 panels populated, golden signals captured |
 | **Compliance Readiness** | SOC2 Type II + HIPAA baseline | RLS (CC6.1), VPC Flow Logs (CC7.2), KMS encryption (CC6.7), OPA policy (CC6.8), audit logs (CC7.3) | Terraform security rules enforce SOC2/HIPAA controls before every deployment |
-| **DR Failover** | RTO < 5 minutes, RPO = 0 | Route53 health-check DNS failover, S3 Cross-Region Replication, KMS-encrypted backups | 29 Terraform DR resources verified: PRIMARY/SECONDARY DNS records + S3 CRR active |
+| **DR Failover** | RTO under 5 minutes, RPO zero | Route53 health-check DNS failover, S3 Cross-Region Replication, KMS-encrypted backups | 29 DR resources verified: PRIMARY/SECONDARY DNS + S3 CRR active |
 
 ---
 
 ## Enterprise Data Platform Blueprint
 
 ```
-═══════════════════════════════════════════════════════════════════════════════════════════
-              ENTERPRISE DATA PLATFORM — END-TO-END ARCHITECTURE MAP
-                     Raw Event Ingestion → Secure Storage → Analytics
-═══════════════════════════════════════════════════════════════════════════════════════════
+================================================================================
+        ENTERPRISE DATA PLATFORM — END-TO-END ARCHITECTURE MAP
+          Raw Event Ingestion  →  Secure Storage  →  Executive Analytics
+================================================================================
 
-EXTERNAL WORLD
-──────────────
-  IoT Sensors        Mobile Apps        Partner APIs        Webhook Events
-       │                   │                  │                    │
-       └───────────────────┴──────────────────┴────────────────────┘
-                                      │
-                              HTTPS :443 (TLS 1.3)
-                                      │
-═══════════════════════════════════════════════════════════════════════════════════════════
-TIER 1 — INGESTION & STREAM OPERATIONS PLANE
-═══════════════════════════════════════════════════════════════════════════════════════════
-                                      │
-                         ┌────────────▼────────────┐
-                         │    NGINX INGRESS         │
-                         │  Rate limit: 100 req/s   │
-                         │  Security headers: HSTS  │
-                         │  SSL termination: TLS1.3 │
-                         │  CORS: enterprise.local  │
-                         └────────────┬────────────┘
-                                      │
-              ┌───────────────────────┼───────────────────────┐
-              │                       │                       │
-    ┌─────────▼──────────┐  ┌────────▼────────┐  ┌──────────▼────────┐
-    │  MICROSERVICES API  │  │  AI AGENT FLEET │  │   RAG ENGINE      │
-    │  Fastify :3000      │  │  FastAPI :8000  │  │  FastAPI :8080    │
-    │  244 req/s verified │  │  LangGraph      │  │  ChromaDB vectors │
-    │  Idempotency keys   │  │  Groq LLM       │  │  21 docs indexed  │
-    │  Race-condition safe│  │  Memory persist │  │  Threshold: 0.35  │
-    └─────────┬──────────┘  └────────┬────────┘  └──────────┬────────┘
-              │                       │                       │
-              ▼                       ▼                       ▼
-    ┌──────────────────────────────────────────────────────────────────┐
-    │                    APACHE KAFKA EVENT BUS                        │
-    │  Topics: edp-agents · edp-orders · edp-audit · edp-metrics      │
-    │  Partitions: 12 · Replication: 3 · Retention: 7 days            │
-    │  Consumer groups: finops-consumer · agent-consumer               │
-    └───────────────────────────┬──────────────────────────────────────┘
-                                │
-              ┌─────────────────┴──────────────────┐
-              │                                    │
-    ┌─────────▼──────────┐             ┌──────────▼────────┐
-    │  FINOPS ANOMALY     │             │  OBSERVABILITY    │
-    │  ENGINE             │             │  STACK            │
-    │  AWS Lambda         │             │  prom-client      │
-    │  Z-score analysis   │             │  Prometheus scrape│
-    │  SNS alerts         │             │  15 Grafana panels│
-    │  EC2: +351% CRIT ✓  │             │  Golden signals   │
-    └────────────────────┘             └──────────┬────────┘
-                                                  │
-═══════════════════════════════════════════════════════════════════════════════════════════
-TIER 2 — RELATIONAL DATA LEDGERS & SECURE MULTI-TENANT CORE
-═══════════════════════════════════════════════════════════════════════════════════════════
-                                                  │
-                    ┌─────────────────────────────┘
-                    │
-         ┌──────────▼──────────┐
-         │    RBAC ENGINE       │
-         │  JWT RS256 :4000     │
-         │  RS256 asymmetric    │
-         │  Roles: viewer/op/   │
-         │         admin        │
-         │  Audit: immutable    │
-         └──────────┬──────────┘
-                    │ Authenticated request
-                    ▼
-         ┌──────────────────────┐
-         │  MULTITENANT API     │
-         │  NestJS :3000        │
-         │  X-Tenant-ID header  │   ← Application Security Layer (Layer 1)
-         │  Middleware validates │
-         └──────────┬───────────┘
-                    │
-                    ▼
-    ┌───────────────────────────────────────────────────────────┐
-    │              POSTGRESQL 16 — SHARED SCHEMA                │
-    │                                                           │
-    │  ┌─────────────────────────────────────────────────────┐ │
-    │  │  ROW-LEVEL SECURITY (Engine Layer)  ← Layer 2       │ │
-    │  │                                                     │ │
-    │  │  SET LOCAL app.tenant_id = '{tenantId}'             │ │
-    │  │  POLICY: USING (tenantId = current_setting(...))    │ │
-    │  │                                                     │ │
-    │  │  Tables protected by RLS:                           │ │
-    │  │    ✓ users        ✓ products    ✓ orders            │ │
-    │  │    ✓ order_items  ✓ audit_logs                      │ │
-    │  │                                                     │ │
-    │  │  Breach simulation: 24 tests — ZERO leaks           │ │
-    │  └─────────────────────────────────────────────────────┘ │
-    │                                                           │
-    │  Tenants: Acme Corporation | Globex Inc | + N more        │
-    │  Port 5432 — accessible ONLY from application SG         │
-    └───────────────────────────────────────────────────────────┘
-                    │
-                    ▼
-         ┌──────────────────────┐
-         │    REDIS CACHE        │
-         │  Session store        │
-         │  Rate limiting        │
-         │  allkeys-lru eviction │
-         │  TLS + KMS encrypted  │
-         └──────────────────────┘
+ EXTERNAL WORLD
+ ───────────────
+ IoT Sensors   Mobile Apps   Partner APIs   Webhook Events
+      |              |              |              |
+      +--------------+--------------+--------------+
+                            |
+                    HTTPS :443 (TLS 1.3)
+                            |
+================================================================================
+ TIER 1 — INGESTION & STREAM OPERATIONS
+================================================================================
+                            |
+               +------------+------------+
+               |      NGINX INGRESS      |
+               |  Rate limit: 100 req/s  |
+               |  SSL termination        |
+               |  Security headers       |
+               |  CORS enforcement       |
+               +------------+------------+
+                            |
+           +----------------+----------------+
+           |                |                |
+  +--------+-------+ +------+-------+ +------+-------+
+  | MICROSERVICES  | | AI AGENT     | | RAG ENGINE   |
+  | Fastify :3000  | | FLEET        | | FastAPI :8080|
+  | 244 req/s      | | FastAPI :8000| | ChromaDB     |
+  | Kafka producer | | LangGraph    | | 21 docs idx  |
+  | Idempotent     | | Groq LLM     | | Thresh: 0.35 |
+  +--------+-------+ +------+-------+ +------+-------+
+           |                |                |
+           +----------------+----------------+
+                            |
+           +----------------+----------------+
+           |      APACHE KAFKA EVENT BUS     |
+           |  Topics: orders, agents, audit  |
+           |  Partitions: 12  Replication: 3 |
+           |  Retention: 7d   DLQ: enabled   |
+           +-------+--------------------+----+
+                   |                    |
+          +--------+------+    +--------+--------+
+          | FINOPS ANOMALY|    | OBSERVABILITY   |
+          | ENGINE        |    | STACK           |
+          | AWS Lambda    |    | prom-client     |
+          | Z-score +351% |    | Prometheus      |
+          | SNS: CRITICAL |    | 15 Grafana pnls |
+          +---------------+    +-----------------+
 
-         ┌──────────────────────┐
-         │  LEAD NAVIGATOR UI   │
-         │  React TS :5173      │
-         │  5 components        │
-         │  Storybook :6006     │
-         │  DataTable 100 rows  │
-         └──────────────────────┘
+================================================================================
+ TIER 2 — RELATIONAL DATA LEDGERS & SECURE MULTI-TENANT CORE
+================================================================================
 
-═══════════════════════════════════════════════════════════════════════════════════════════
-TIER 3 — DECLARATIVE CLOUD INFRASTRUCTURE, GITOPS & RESILIENCY MESH
-═══════════════════════════════════════════════════════════════════════════════════════════
+          +--------------------------------------+
+          |           RBAC ENGINE               |
+          |  Node.js + Express :4000             |
+          |  JWT RS256 (2048-bit RSA)            |
+          |  Roles: viewer / operator / admin    |
+          |  Audit: immutable timestamped log    |
+          +----------------+---------------------+
+                           |  Authenticated request
+                           |
+          +----------------+---------------------+
+          |         MULTITENANT API              |
+          |  NestJS :3000                        |
+          |  X-Tenant-ID header validation  [L1] |
+          +----------------+---------------------+
+                           |
+          +----------------+---------------------+
+          |    POSTGRESQL 16 — SHARED SCHEMA     |
+          |                                      |
+          |  +----------------------------------+|
+          |  | ROW-LEVEL SECURITY (Engine) [L2] ||
+          |  | SET LOCAL app.tenant_id = '{id}' ||
+          |  | PL/pgSQL policies enforced        ||
+          |  |                                  ||
+          |  | Protected tables:                ||
+          |  | users, products, orders          ||
+          |  | order_items, audit_logs          ||
+          |  |                                  ||
+          |  | Breach tests: 24 — ZERO leaks    ||
+          |  +----------------------------------+|
+          |                                      |
+          |  Port 5432: app security group ONLY  |
+          |  Tenants: Acme Corp | Globex Inc     |
+          +----------------+---------------------+
+                           |
+          +----------------+---------------------+
+          |         REDIS 7 — CACHE LAYER        |
+          |  Session store · Rate limiting        |
+          |  allkeys-lru eviction · TLS + KMS    |
+          |  Port 6379: app security group ONLY  |
+          +--------------------------------------+
 
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  PLATFORM FABRIC — TERRAFORM (65 resources) + KUBERNETES (25 manifests)         │
-  │                                                                                  │
-  │  VPC 10.0.0.0/16                                                                 │
-  │  ├── PUBLIC SUBNET 10.0.0.0/24   (ALB · NAT Gateway · Ingress)                  │
-  │  │     SG: 443/80 from 0.0.0.0/0 inbound                                        │
-  │  ├── APP SUBNET 10.0.10.0/24     (Node.js · Python · AI services)               │
-  │  │     SG: 3000/8080/8000 from ALB SG only                                      │
-  │  └── DATA SUBNET 10.0.20.0/24    (PostgreSQL · Redis)                           │
-  │        SG: 5432/6379 from APP SG only — NO internet path                        │
-  │                                                                                  │
-  │  HASHICORP VAULT                                                                 │
-  │  └── KV engine: DATABASE_URL · REDIS_URL · JWT_SECRET · GROQ_API_KEY            │
-  │       TTL: 1 hour · Auth: Kubernetes ServiceAccount JWT                         │
-  │       Zero hardcoded credentials in any image or source file                    │
-  │                                                                                  │
-  │  KUBERNETES HPA                                                                  │
-  │  └── multitenant-api: 3→20 pods (CPU: 70%, MEM: 80%)                           │
-  │  └── rag-engine:      2→8  pods (CPU: 75%, MEM: 80%)                           │
-  │  └── ai-agent-fleet:  2→10 pods (CPU: 70%)                                      │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+          +--------------------------------------+
+          |         LEAD NAVIGATOR UI            |
+          |  React TypeScript · Vite :5173       |
+          |  5 production components             |
+          |  DataTable: 100 records paginated    |
+          |  Storybook 8 docs :6006              |
+          +--------------------------------------+
 
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  SECURE SUPPLY CHAIN (4-stage gate — all passing)                               │
-  │  Stage 1: Gitleaks  → secret detection   ✓                                      │
-  │  Stage 2: Semgrep   → SAST analysis      ✓                                      │
-  │  Stage 3: Syft      → SBOM generation    ✓                                      │
-  │  Stage 4: Trivy     → CVE image scan     ✓                                      │
-  │  → Signed image pushed to registry → Kubernetes pulls approved image only       │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+================================================================================
+ TIER 3 — DECLARATIVE CLOUD INFRASTRUCTURE & RESILIENCY MESH
+================================================================================
 
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  CHAOS ENGINEERING MESH (SRE Resiliency Layer)                                  │
-  │                                                                                  │
-  │  chaos_monkey_simulator.py                                                       │
-  │  ├── MODE kill    → docker kill {container} → measure recovery time             │
-  │  └── MODE latency → pause container 30s    → verify retry policies              │
-  │                                                                                  │
-  │  Prometheus (20 alert rules across 7 groups)                                    │
-  │  ├── ContainerMemoryCritical  → fires at 90% memory utilization                 │
-  │  ├── PostgreSQLConnectionErrorCritical → fires at 5% error rate                 │
-  │  ├── ContainerDown            → fires after 30s metric gap                      │
-  │  └── RecoveryTimeSLOBreached  → fires if recovery > 60s                         │
-  │                                                                                  │
-  │  Alertmanager → webhook → terminal console (verified end-to-end)                │
-  │                                                                                  │
-  │  OPA Rego Policy Gate (8 rules, evaluated in 8ms)                               │
-  │  ├── RULE-001: No 0.0.0.0/0 ingress on data/cache SGs → BLOCKS deploy          │
-  │  ├── RULE-002: RDS storage_encrypted = true required   → BLOCKS deploy          │
-  │  ├── RULE-003: RDS publicly_accessible = false required → BLOCKS deploy         │
-  │  └── RULE-004 to 008: S3, KMS, VPC Flow Logs, deletion protection              │
-  │  Result: 0 violations on platform-fabric → DEPLOYMENT APPROVED                 │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+ +--------------------------------------------------------------------------+
+ |  PLATFORM FABRIC — Terraform (65 res) + Kubernetes (25 manifests)       |
+ |                                                                          |
+ |  VPC 10.0.0.0/16                                                         |
+ |  +-- PUBLIC  10.0.0.0/24   ALB · NAT Gateway · Ingress                  |
+ |  |   SG: 443/80 inbound from 0.0.0.0/0                                  |
+ |  |                                                                       |
+ |  +-- APP     10.0.10.0/24  Node.js · Python · AI services               |
+ |  |   SG: 3000/8080/8000 from ALB security group ONLY                    |
+ |  |                                                                       |
+ |  +-- DATA    10.0.20.0/24  PostgreSQL · Redis                           |
+ |      SG: 5432/6379 from APP security group ONLY                         |
+ |      Route table: NO internet gateway · NO NAT path                     |
+ |                                                                          |
+ |  HASHICORP VAULT                                                         |
+ |  +-- DATABASE_URL · REDIS_URL · JWT_SECRET · GROQ_API_KEY               |
+ |      TTL: 1hr · Auth: Kubernetes ServiceAccount JWT                     |
+ |      Zero hardcoded credentials in any image or source file             |
+ |                                                                          |
+ |  KUBERNETES HPA AUTOSCALING                                              |
+ |  +-- multitenant-api:  3 -> 20 pods  (CPU >70%,  MEM >80%)             |
+ |  +-- rag-engine:       2 -> 8  pods  (CPU >75%,  MEM >80%)             |
+ |  +-- ai-agent-fleet:   2 -> 10 pods  (CPU >70%)                        |
+ +--------------------------------------------------------------------------+
 
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  DR PIPELINE (Multi-Region Failover)                                            │
-  │  PRIMARY region  → Route53 health check → HEALTHY → serves traffic             │
-  │  PRIMARY fails   → Route53 health check → UNHEALTHY                            │
-  │                  → DNS TTL expires (60s)                                        │
-  │                  → SECONDARY endpoint promoted automatically                   │
-  │  S3 CRR: data replicated cross-region in real-time (KMS + STANDARD_IA)        │
-  │  RTO: < 5 minutes · RPO: 0 (synchronous replication)                           │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+ +--------------------------------------------------------------------------+
+ |  SECURE SUPPLY CHAIN — 4-stage gate (all passing)                       |
+ |  Stage 1: Gitleaks  -> secret detection              PASS               |
+ |  Stage 2: Semgrep   -> SAST analysis                 PASS               |
+ |  Stage 3: Syft      -> SBOM + dependency scan        PASS               |
+ |  Stage 4: Trivy     -> CVE container scan            PASS               |
+ |  Signed image -> registry -> K8s pulls approved image only              |
+ +--------------------------------------------------------------------------+
 
-═══════════════════════════════════════════════════════════════════════════════════════════
-TIER 4 — EXECUTIVE ANALYTICS & COMPLIANCE LAYER
-═══════════════════════════════════════════════════════════════════════════════════════════
+ +--------------------------------------------------------------------------+
+ |  CHAOS ENGINEERING MESH — Cross-cutting governance layer                |
+ |                                                                          |
+ |  chaos_monkey_simulator.py                                               |
+ |  +-- MODE kill    -> docker kill container -> measure recovery time      |
+ |  +-- MODE latency -> pause container 30s  -> verify retry policies      |
+ |                                                                          |
+ |  Prometheus alert rules (20 rules across 7 groups)                      |
+ |  +-- ContainerMemoryCritical     fires at 90% memory utilization        |
+ |  +-- PostgreSQLConnectionError   fires at 5% error rate                 |
+ |  +-- ContainerDown               fires after 30s metric gap             |
+ |  +-- RecoveryTimeSLOBreached     fires if recovery exceeds 60s          |
+ |                                                                          |
+ |  Alertmanager -> webhook -> terminal console (verified end-to-end)      |
+ |                                                                          |
+ |  OPA Rego Policy Gate (8 rules, evaluated in 8ms)                       |
+ |  +-- RULE-001: No 0.0.0.0/0 on data/cache SGs    -> BLOCKS deploy      |
+ |  +-- RULE-002: RDS storage_encrypted = true       -> BLOCKS deploy      |
+ |  +-- RULE-003: RDS publicly_accessible = false    -> BLOCKS deploy      |
+ |  +-- RULE-004 to 008: S3, KMS, VPC Logs, deletion protection           |
+ |  Result: 0 violations on platform-fabric -> DEPLOYMENT APPROVED         |
+ +--------------------------------------------------------------------------+
 
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  GRAFANA EXECUTIVE DASHBOARD (15 panels)                                        │
-  │  ├── Platform Health Overview  : PostgreSQL UP · Redis UP · Error Rate          │
-  │  ├── Container Memory Monitor  : 90% CRITICAL threshold line                    │
-  │  ├── DB Error Rate Monitor     : 5% CRITICAL threshold line                     │
-  │  ├── Chaos Events Rate         : Kill/Latency event annotations                 │
-  │  ├── Recovery Time Panel       : SLO <60s target line                           │
-  │  ├── API Throughput            : Success RPS vs Error RPS                       │
-  │  └── PostgreSQL Health         : Connections · TPS · Database size              │
-  │                                                                                  │
-  │  COMPLIANCE POSTURE                                                              │
-  │  ├── SOC2 CC6.1: RLS enforced at DB engine + OPA blocks public SG ingress      │
-  │  ├── SOC2 CC7.2: VPC Flow Logs + Prometheus 15s anomaly detection              │
-  │  ├── SOC2 CC9.2: Weekly chaos runs validate recovery procedures                │
-  │  ├── HIPAA §164.312: KMS encryption at rest + TLS in transit enforced          │
-  │  └── PCI DSS 3.5: No plaintext secrets anywhere — Vault TTL injection only     │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+ +--------------------------------------------------------------------------+
+ |  DR PIPELINE — Multi-Region Failover                                    |
+ |  PRIMARY region  -> Route53 health check -> HEALTHY -> serves traffic   |
+ |  PRIMARY fails   -> DNS TTL expires (60s)                               |
+ |                  -> SECONDARY endpoint promoted automatically           |
+ |  S3 CRR: data replicated cross-region (KMS + STANDARD_IA)              |
+ |  RTO: under 5 minutes · RPO: zero                                       |
+ +--------------------------------------------------------------------------+
 
-═══════════════════════════════════════════════════════════════════════════════════════════
-                         UNIFIED PLATFORM STATS
-═══════════════════════════════════════════════════════════════════════════════════════════
+================================================================================
+ TIER 4 — EXECUTIVE ANALYTICS & COMPLIANCE
+================================================================================
 
-  12 Production-grade repositories  │  65 Terraform resources (0 errors)
-  25 Kubernetes manifests           │  24 Breach tests (0 leaks)
-  20 Prometheus alert rules         │  244 req/s peak throughput
-  8 OPA security rules (0 violations)│  $172,440/year cost savings modeled
-  100% supply chain gate passing    │  100% chaos resilience score
-  81.4/100 data quality score       │  8ms policy evaluation time
+ +--------------------------------------------------------------------------+
+ |  GRAFANA EXECUTIVE DASHBOARD (15 panels)                                |
+ |  +-- Platform Health:   PostgreSQL UP · Redis UP · Error Rate           |
+ |  +-- Memory Monitor:    90% CRITICAL threshold line enforced            |
+ |  +-- DB Error Rate:      5% CRITICAL threshold line enforced            |
+ |  +-- Chaos Events:      Kill/Latency annotations on timeline            |
+ |  +-- Recovery Time:     SLO under 60s target line                       |
+ |  +-- API Throughput:    Success RPS vs Error RPS                        |
+ |  +-- DB Health:         Connections · TPS · Database size               |
+ |                                                                          |
+ |  COMPLIANCE POSTURE                                                      |
+ |  +-- SOC2 CC6.1:  RLS at DB engine + OPA blocks public SG ingress      |
+ |  +-- SOC2 CC7.2:  VPC Flow Logs + Prometheus 15s anomaly detection     |
+ |  +-- SOC2 CC9.2:  Chaos runs validate recovery procedures              |
+ |  +-- HIPAA 164.312: KMS encryption at rest + TLS in transit enforced   |
+ |  +-- PCI DSS 3.5:  No plaintext secrets — Vault TTL injection only     |
+ +--------------------------------------------------------------------------+
 
-═══════════════════════════════════════════════════════════════════════════════════════════
+================================================================================
+                       UNIFIED PLATFORM STATISTICS
+================================================================================
+   13 Production repositories    |   65 Terraform resources (0 errors)
+   25 Kubernetes manifests       |   24 Breach tests (0 leaks)
+   20 Prometheus alert rules     |  244 req/s peak throughput
+    8 OPA security rules         |  $172,440/year cost savings modeled
+  100% supply chain passing      |  100% chaos resilience score
+ 81.4/100 data quality score     |    8ms policy evaluation time
+================================================================================
 ```
 
 ---
 
 ## Technical Depth Reference
 
-### Languages & Runtimes
-`Python 3.11` `Node.js 20` `TypeScript 5` `HCL 1.6` `Rego (OPA)` `Bash` `SQL`
+### Backend
+`Node.js 20` `Python 3.11` `FastAPI` `NestJS` `Express` `Fastify`
+
+### Frontend
+`React 18` `TypeScript` `Vite` `Tailwind CSS` `Zustand` `Storybook 8` `NGINX`
+
+### Databases & Query Languages
+`PostgreSQL 16` `PL/pgSQL` `T-SQL` `Redis 7` `ChromaDB`
 
 ### Infrastructure & Cloud
-`Terraform` `Kubernetes 1.34` `Docker` `Docker Compose` `LocalStack` `AWS (EC2, RDS, S3, Lambda, Route53, KMS, SNS, MSK, ElastiCache, Secrets Manager, CloudWatch, IAM, VPC)`
-
-### Data & Streaming
-`PostgreSQL 16` `Apache Kafka 3.6` `Redis 7` `ChromaDB` `Prisma ORM`
+`Terraform HCL 1.6` `Kubernetes 1.34` `Docker` `Docker Compose` `LocalStack`
+`AWS` — EC2 · RDS · S3 · Lambda · Route53 · KMS · SNS · MSK · ElastiCache · Secrets Manager · CloudWatch · IAM · VPC
 
 ### AI & ML
 `LangGraph` `LangChain` `HuggingFace Transformers` `Groq LLM` `all-MiniLM-L6-v2` `RAG`
@@ -573,14 +571,12 @@ TIER 4 — EXECUTIVE ANALYTICS & COMPLIANCE LAYER
 `Prometheus` `Grafana` `Alertmanager` `cAdvisor` `prom-client` `OPA Rego` `Chaos Engineering`
 
 ### Security & Compliance
-`JWT RS256` `HashiCorp Vault` `Gitleaks` `Semgrep` `Trivy` `Syft SBOM` `Row-Level Security` `KMS`
+`JWT RS256` `HashiCorp Vault` `Gitleaks` `Semgrep` `Trivy` `Syft SBOM`
+`Row-Level Security` `KMS` `SOC2` `HIPAA` `PCI DSS`
 
-### Frontend
-`React 18` `TypeScript` `Vite` `Tailwind CSS` `Zustand` `Storybook 8` `NGINX`
+### Languages & Runtimes
+`Python` `TypeScript` `JavaScript` `HCL` `Rego` `Bash` `SQL` `PL/pgSQL` `T-SQL`
 
 ---
 
-*Built end-to-end by a single principal engineer. Every line of infrastructure code, application logic, security policy, and chaos test written, debugged, deployed, and verified.*
-
-[![GitHub](https://img.shields.io/badge/GitHub-RandyRozario-181717?style=flat-square&logo=github)](https://github.com/RandyRozario)
-[![LeetCode](https://img.shields.io/badge/LeetCode-randyrozario-FFA116?style=flat-square&logo=leetcode)](https://leetcode.com/u/randyrozario/)
+*Built end-to-end by a single principal engineer. Every line of infrastructure code, application logic, security policy, and chaos test written, debugged, deployed, and verified. Development project extensions in active planning.*
