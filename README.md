@@ -395,7 +395,7 @@ The SRE command center and the only project in this portfolio that has no peers 
 ================================================================================
 
           +--------------------------------------+
-          |           RBAC ENGINE               |
+          |           RBAC ENGINE                |
           |  Node.js + Express :4000             |
           |  JWT RS256 (2048-bit RSA)            |
           |  Roles: viewer / operator / admin    |
@@ -415,7 +415,7 @@ The SRE command center and the only project in this portfolio that has no peers 
           |  +----------------------------------+|
           |  | ROW-LEVEL SECURITY (Engine) [L2] ||
           |  | SET LOCAL app.tenant_id = '{id}' ||
-          |  | PL/pgSQL policies enforced        ||
+          |  | PL/pgSQL policies enforced       ||
           |  |                                  ||
           |  | Protected tables:                ||
           |  | users, products, orders          ||
@@ -430,7 +430,7 @@ The SRE command center and the only project in this portfolio that has no peers 
                            |
           +----------------+---------------------+
           |         REDIS 7 — CACHE LAYER        |
-          |  Session store · Rate limiting        |
+          |  Session store · Rate limiting       |
           |  allkeys-lru eviction · TLS + KMS    |
           |  Port 6379: app security group ONLY  |
           +--------------------------------------+
@@ -449,27 +449,27 @@ The SRE command center and the only project in this portfolio that has no peers 
 
  +--------------------------------------------------------------------------+
  |  PLATFORM FABRIC — Terraform (65 res) + Kubernetes (25 manifests)       |
- |                                                                          |
- |  VPC 10.0.0.0/16                                                         |
+ |                                                                         |
+ |  VPC 10.0.0.0/16                                                        |
  |  +-- PUBLIC  10.0.0.0/24   ALB · NAT Gateway · Ingress                  |
  |  |   SG: 443/80 inbound from 0.0.0.0/0                                  |
- |  |                                                                       |
+ |  |                                                                      |
  |  +-- APP     10.0.10.0/24  Node.js · Python · AI services               |
  |  |   SG: 3000/8080/8000 from ALB security group ONLY                    |
- |  |                                                                       |
+ |  |                                                                      |
  |  +-- DATA    10.0.20.0/24  PostgreSQL · Redis                           |
  |      SG: 5432/6379 from APP security group ONLY                         |
  |      Route table: NO internet gateway · NO NAT path                     |
- |                                                                          |
- |  HASHICORP VAULT                                                         |
+ |                                                                         |
+ |  HASHICORP VAULT                                                        |
  |  +-- DATABASE_URL · REDIS_URL · JWT_SECRET · GROQ_API_KEY               |
  |      TTL: 1hr · Auth: Kubernetes ServiceAccount JWT                     |
  |      Zero hardcoded credentials in any image or source file             |
- |                                                                          |
- |  KUBERNETES HPA AUTOSCALING                                              |
- |  +-- multitenant-api:  3 -> 20 pods  (CPU >70%,  MEM >80%)             |
- |  +-- rag-engine:       2 -> 8  pods  (CPU >75%,  MEM >80%)             |
- |  +-- ai-agent-fleet:   2 -> 10 pods  (CPU >70%)                        |
+ |                                                                         |
+ |  KUBERNETES HPA AUTOSCALING                                             |
+ |  +-- multitenant-api:  3 -> 20 pods  (CPU >70%,  MEM >80%)              |
+ |  +-- rag-engine:       2 -> 8  pods  (CPU >75%,  MEM >80%)              |
+ |  +-- ai-agent-fleet:   2 -> 10 pods  (CPU >70%)                         |
  +--------------------------------------------------------------------------+
 
  +--------------------------------------------------------------------------+
@@ -483,24 +483,24 @@ The SRE command center and the only project in this portfolio that has no peers 
 
  +--------------------------------------------------------------------------+
  |  CHAOS ENGINEERING MESH — Cross-cutting governance layer                |
- |                                                                          |
- |  chaos_monkey_simulator.py                                               |
- |  +-- MODE kill    -> docker kill container -> measure recovery time      |
+ |                                                                         |
+ |  chaos_monkey_simulator.py                                              |
+ |  +-- MODE kill    -> docker kill container -> measure recovery time     |
  |  +-- MODE latency -> pause container 30s  -> verify retry policies      |
- |                                                                          |
+ |                                                                         |
  |  Prometheus alert rules (20 rules across 7 groups)                      |
  |  +-- ContainerMemoryCritical     fires at 90% memory utilization        |
  |  +-- PostgreSQLConnectionError   fires at 5% error rate                 |
  |  +-- ContainerDown               fires after 30s metric gap             |
  |  +-- RecoveryTimeSLOBreached     fires if recovery exceeds 60s          |
- |                                                                          |
+ |                                                                         |
  |  Alertmanager -> webhook -> terminal console (verified end-to-end)      |
- |                                                                          |
+ |                                                                         |
  |  OPA Rego Policy Gate (8 rules, evaluated in 8ms)                       |
- |  +-- RULE-001: No 0.0.0.0/0 on data/cache SGs    -> BLOCKS deploy      |
+ |  +-- RULE-001: No 0.0.0.0/0 on data/cache SGs    -> BLOCKS deploy       |
  |  +-- RULE-002: RDS storage_encrypted = true       -> BLOCKS deploy      |
  |  +-- RULE-003: RDS publicly_accessible = false    -> BLOCKS deploy      |
- |  +-- RULE-004 to 008: S3, KMS, VPC Logs, deletion protection           |
+ |  +-- RULE-004 to 008: S3, KMS, VPC Logs, deletion protection            |
  |  Result: 0 violations on platform-fabric -> DEPLOYMENT APPROVED         |
  +--------------------------------------------------------------------------+
 
@@ -509,7 +509,7 @@ The SRE command center and the only project in this portfolio that has no peers 
  |  PRIMARY region  -> Route53 health check -> HEALTHY -> serves traffic   |
  |  PRIMARY fails   -> DNS TTL expires (60s)                               |
  |                  -> SECONDARY endpoint promoted automatically           |
- |  S3 CRR: data replicated cross-region (KMS + STANDARD_IA)              |
+ |  S3 CRR: data replicated cross-region (KMS + STANDARD_IA)               |
  |  RTO: under 5 minutes · RPO: zero                                       |
  +--------------------------------------------------------------------------+
 
@@ -526,13 +526,13 @@ The SRE command center and the only project in this portfolio that has no peers 
  |  +-- Recovery Time:     SLO under 60s target line                       |
  |  +-- API Throughput:    Success RPS vs Error RPS                        |
  |  +-- DB Health:         Connections · TPS · Database size               |
- |                                                                          |
- |  COMPLIANCE POSTURE                                                      |
- |  +-- SOC2 CC6.1:  RLS at DB engine + OPA blocks public SG ingress      |
- |  +-- SOC2 CC7.2:  VPC Flow Logs + Prometheus 15s anomaly detection     |
- |  +-- SOC2 CC9.2:  Chaos runs validate recovery procedures              |
- |  +-- HIPAA 164.312: KMS encryption at rest + TLS in transit enforced   |
- |  +-- PCI DSS 3.5:  No plaintext secrets — Vault TTL injection only     |
+ |                                                                         |
+ |  COMPLIANCE POSTURE                                                     |
+ |  +-- SOC2 CC6.1:  RLS at DB engine + OPA blocks public SG ingress       |
+ |  +-- SOC2 CC7.2:  VPC Flow Logs + Prometheus 15s anomaly detection      |
+ |  +-- SOC2 CC9.2:  Chaos runs validate recovery procedures               |
+ |  +-- HIPAA 164.312: KMS encryption at rest + TLS in transit enforced    |
+ |  +-- PCI DSS 3.5:  No plaintext secrets — Vault TTL injection only      |
  +--------------------------------------------------------------------------+
 
 ================================================================================
