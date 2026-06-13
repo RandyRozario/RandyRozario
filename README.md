@@ -1,5 +1,5 @@
 # Enterprise Data Platform Portfolio
-### Principal Engineer · Cloud Infrastructure · Distributed Systems · AI Engineering
+### DevOps · Cloud Infrastructure · Distributed Systems · AI Engineering
 
 > **A production-grade ecosystem of 13 interconnected systems spanning real-time event streaming, secure multi-tenant data architecture, declarative cloud infrastructure, AI-native search, and automated chaos resiliency — built, deployed, verified, and documented end-to-end.**
 
